@@ -10,9 +10,7 @@ resource "aws_instance" "awx_controller" {
 
 # Variables
 secret_key=`openssl rand -base64 30`
-
-# Install PKGs
-yum install -y epel-release && yum update -y && yum install -y python3 git gcc gcc-c++ ansible nodejs gettext device-mapper-persistent-data lvm2 bzip2 wget nano libseccomp
+pkglist="python3 git gcc gcc-c++ ansible nodejs gettext device-mapper-persistent-data lvm2 bzip2 wget nano libseccomp docker"
 
 # OS Setting
 echo 'Ezcom!234' |passwd --stdin 'root'
@@ -26,11 +24,45 @@ echo """nameserver 8.8.8.8
 nameserver 8.8.4.4""" >> /etc/resolv.conf
 chattr +i /etc/resolv.conf
 
+# Install PKGs
+while :
+do
+        ping -c 4 8.8.8.8 > /dev/null
+        if [ $? -eq 0 ]; then
+        echo "ping test success"
+        break
+        fi
+done
+
+yum install -y epel-release && yum update -y
+
+for i in $pkglist
+do
+        checkpkg=`rpm -q $i`
+        if [ "$checkpkg" == "package $i is not installed" ]; then
+                yum install -y $i
+        fi
+done
+
+if [ $? -eq 0 ]; then
+        echo "success"
+else
+        echo "fail"
+fi
+
 # Install Docker
 wget https://download.docker.com/linux/centos/docker-ce.repo -P /root/
+
+if [ $? -eq 0 ]; then
 cp /root/docker-ce.repo /etc/yum.repos.d/
-yum install -y docker-ce && systemctl start docker && systemctl enable docker
-yum install -y docker-compose
+fi
+
+if [ $? -eq 0 ]; then
+        yum install -y docker-ce
+        yum install -y docker-compose
+fi
+
+systemctl enable docker && systemctl start docker
 
 # Install AWX
 ## 치환할 때 특수문자 있으면 [| + "]
@@ -47,7 +79,10 @@ sed -i 's|#project_data_dir=/var/lib/awx/projects|project_data_dir=/var/lib/awx/
 
 # rc.local config
 echo "ansible-playbook -i /work/installer/inventory /work/installer/install.yml && sed -i /ansible/d /etc/rc.d/rc.local && chmod -x /etc/rc.d/rc.local" >> /etc/rc.d/rc.local
-chmod +x /etc/rc.d/rc.local
+
+if [ $? -eq 0 ]; then
+        chmod +x /etc/rc.d/rc.local
+fi
 
 # close script && reboot
 if [ $? -eq 0 ]; then

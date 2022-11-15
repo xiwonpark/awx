@@ -18,12 +18,20 @@ output "awx_controller" {
     value = module.awx_controller.awx_controller
 }
 
-output "awx_node01" {
-    value = module.awx_nodes.awx_node01
+output "ldapserver" {
+    value = module.awx_nodes.ldapserver
 }
 
-output "awx_node02" {
-    value = module.awx_nodes.awx_node02
+output "vncserver" {
+    value = module.awx_nodes.vncserver
+}
+
+output "lsfserver" {
+    value = module.awx_nodes.lsfserver
+}
+
+output "lsfnode01" {
+    value = module.awx_nodes.lsfnode01
 }
 
 output "bastion" {
