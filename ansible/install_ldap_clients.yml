@@ -1,0 +1,15 @@
+---
+- name: OpenLDAP Clients Installation
+  hosts: all
+  remote_user: root
+  become: true
+  taske:
+  - name: YUM OpenLDAP Clients
+    yum:
+      name: 
+        - openldap-clients
+        - nss-pam-ldapd
+        - pam_ldap 
+        - autofs 
+        - nfs-utils
+      state: latest

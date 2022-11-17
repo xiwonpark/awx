@@ -1,0 +1,6 @@
+- name: LSF Installation
+  hosts: lsfserver
+  remote_user: root
+  become: true
+  tasks:
+  - name: LSF Installation
