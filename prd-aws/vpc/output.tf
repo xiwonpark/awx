@@ -2,14 +2,18 @@ output "vpc_id" {
   value = aws_vpc.vpc.id
 }
 
-output "public_subnet" {
-  value = aws_subnet.public.id
+output "public_sn_a" {
+  value = aws_subnet.public_sn_a.id
 }
 
-output "private_subnet" {
-  value = aws_subnet.private.id
+output "public_sn_b" {
+  value = aws_subnet.public_sn_b.id
 }
 
-output "vgw" {
-    value = aws_vpn_gateway.vpn_gw.id
+output "private_sn_a" {
+  value = aws_subnet.private_sn_a.id
+}
+
+output "target_group_arn" {
+  value = aws_alb_target_group.target_group.arn
 }

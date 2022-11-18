@@ -5,30 +5,30 @@ resource "aws_vpc" "vpc" {
         }
 }
 
-resource "aws_subnet" "public" {
+resource "aws_subnet" "public_sn_a" {
         vpc_id = aws_vpc.vpc.id
         availability_zone = "ap-northeast-2a"
-        cidr_block = var.public_subnet_cidr
+        cidr_block = var.public_sn_a
 
         tags = {
                 Name = "sw-tf-pb-sn"
         }
 }
 
-resource "aws_subnet" "public2" {
+resource "aws_subnet" "public_sn_b" {
         vpc_id = aws_vpc.vpc.id
-        availability_zone = "ap-northeast-2c"
-        cidr_block = var.public2_subnet_cidr
+        availability_zone = "ap-northeast-2b"
+        cidr_block = var.public_sn_b
 
         tags = {
                 Name = "sw-tf-pb2-sn"
         }
 }
 
-resource "aws_subnet" "private" {
+resource "aws_subnet" "private_sn_a" {
         vpc_id = aws_vpc.vpc.id
         availability_zone = "ap-northeast-2a"
-        cidr_block = var.private_subnet_cidr
+        cidr_block = var.private_sn_a
 
         tags = {
                 Name = "sw-tf-pv-sn"
@@ -64,13 +64,18 @@ resource "aws_route_table" "private_route_table" {
         }
 }
 
-resource "aws_route_table_association" "public_2a" {
-        subnet_id = aws_subnet.public.id
+resource "aws_route_table_association" "rt_association_pb_sn_a" {
+        subnet_id = aws_subnet.public_sn_a.id
         route_table_id = aws_default_route_table.public_route_table.id
 }
 
-resource "aws_route_table_association" "private_2a" {
-        subnet_id = aws_subnet.private.id
+resource "aws_route_table_association" "rt_association_pb_sn_b" {
+        subnet_id = aws_subnet.public_sn_b.id
+        route_table_id = aws_default_route_table.public_route_table.id
+}
+
+resource "aws_route_table_association" "rt_association_pv_sn_a" {
+        subnet_id = aws_subnet.private_sn_a.id
         route_table_id = aws_route_table.private_route_table.id
 }
 
@@ -83,7 +88,7 @@ resource "aws_eip" "nat_eip" {
 
 resource "aws_nat_gateway" "nat_gateway" {
 	allocation_id = aws_eip.nat_eip.id
-	subnet_id = aws_subnet.public.id
+	subnet_id = aws_subnet.public_sn_a.id
 
 	tags = {
 		Name = "sw-tf-nat-gw"
@@ -96,31 +101,6 @@ resource "aws_vpn_gateway" "vpn_gw" {
         tags = {
                 Name = "sw-tf-vgw"
         }
-}
-
-resource "aws_alb" "alb" {
-        name = "sw-tf-alb"
-        internal = false
-        load_balancer_type = "application"
-        security_groups = [var.default_sg]
-        subnets = [aws_subnet.public.id, aws_subnet.public2.id]
-
-        tags = {
-                Name = "sw-tf-alb"
-        }
-}
-
-resource "aws_alb_target_group" "target_group" {
-        name = "sw-tf-tg-awx"
-        port = 80
-        protocol = "HTTP"
-        vpc_id = aws_vpc.vpc.id
-}
-
-resource "aws_alb_target_group_attachment" "target_group_attach" {
-        target_group_arn = aws_alb_target_group.target_group.arn
-        target_id = var.target_id
-        port = 80
 }
 
 data "aws_acm_certificate" "aws_cert" {
@@ -140,3 +120,23 @@ resource "aws_alb_listener" "listener" {
                 type = "forward"
         }
 }
+
+resource "aws_alb" "alb" {
+        name = "sw-tf-alb"
+        internal = false
+        load_balancer_type = "application"
+        security_groups = [var.default_sg]
+        subnets = [aws_subnet.public_sn_a.id, aws_subnet.public_sn_b.id]
+
+        tags = {
+                Name = "sw-tf-alb"
+        }
+}
+
+resource "aws_alb_target_group" "target_group" {
+        name = "sw-tf-tg-awx"
+        port = 80
+        protocol = "HTTP"
+        vpc_id = aws_vpc.vpc.id
+}
+

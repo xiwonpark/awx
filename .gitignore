@@ -1,0 +1,5 @@
+prd-aws/secret.tf
+prd-aws/.terraform
+prd-aws/.terraform.lock.hcl
+prd-aws/terraform.tfstate
+.DS_Store

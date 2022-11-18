@@ -4,31 +4,31 @@ provider "aws" {
         secret_key = var.secret_key
 }
 
-
 module "vpc" {
-        source = "./vpc"
-        vpc_cidr = "10.0.0.0/16"
-        public_subnet_cidr = "10.0.0.0/24"
-        public2_subnet_cidr = "10.0.20.0/24"
-        private_subnet_cidr = "10.0.10.0/24"
-        route_cidr      = "0.0.0.0/0"
-        default_sg = module.sg.default_sg
-        target_id = module.ec2.ansible-controller
+        source                  = "./vpc"
+        default_sg              = module.sg.default_sg
 }
 
 module "sg" {
-        source = "./sg"
-        default_sg_cidr = "0.0.0.0/0"
-        vpc_id = module.vpc.vpc_id
+        source                  = "./sg"
+        vpc_id                  = module.vpc.vpc_id
 }
 
-module "ec2" {
-        source = "./ec2"
-        public_subnet = module.vpc.public_subnet
-        private_subnet = module.vpc.private_subnet
-        cent79_ami = "ami-09e2a570cb404b37e"
-	default_sg = module.sg.default_sg
-	ansible_controller_ip = "10.0.10.21"
-        ansible_node01_ip = "10.0.10.22"
-        ansible_node02_ip = "10.0.10.23"
+module "bastion" {
+        source                  = "./bastion"
+        public_sn_a             = module.vpc.public_sn_a
+        default_sg              = module.sg.default_sg
+}
+
+module "awx_controller" {
+        source                  = "./awx_controller"
+        private_sn_a            = module.vpc.private_sn_a
+        default_sg              = module.sg.default_sg
+        target_group_arn        = module.vpc.target_group_arn
+}
+
+module "awx_nodes" {
+        source                  ="./awx_nodes"
+        private_sn_a            = module.vpc.private_sn_a
+        default_sg              = module.sg.default_sg
 }

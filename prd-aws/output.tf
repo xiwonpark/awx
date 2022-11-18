@@ -1,39 +1,39 @@
-output "vpc_id" {
-        value = module.vpc.vpc_id
+output "public_sn_a" {
+    value = module.vpc.private_sn_a
 }
 
-output "public_subnet" {
-        value = module.vpc.public_subnet
+output "public_sn_b" {
+    value = module.vpc.public_sn_b
 }
 
-output "private_subnet" {
-        value = module.vpc.private_subnet
+output "private_sn_a" {
+    value = module.vpc.private_sn_a
 }
 
-output "vgw" {
-        value = module.vpc.vgw
+output "default_sg" {
+    value = module.sg.default_sg
 }
 
-output "ansible-controller" {
-        value = module.ec2.ansible-controller
+output "awx_controller" {
+    value = module.awx_controller.awx_controller
 }
 
-output "ansible-node01" {
-        value = module.ec2.ansible-node01
+output "ldapserver" {
+    value = module.awx_nodes.ldapserver
 }
 
-output "ansible-node02" {
-        value = module.ec2.ansible-node02
+output "vncserver" {
+    value = module.awx_nodes.vncserver
 }
 
-output "bastion-eip" {
-	value = module.ec2.bastion-eip
+output "lsfserver" {
+    value = module.awx_nodes.lsfserver
+}
+
+output "lsfnode01" {
+    value = module.awx_nodes.lsfnode01
 }
 
 output "bastion" {
-	value = module.ec2.bastion
+    value = module.bastion.bastion
 }
-
-# output "nginx" {
-#         value = module.ec2.nginx
-# }

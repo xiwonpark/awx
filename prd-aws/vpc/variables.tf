@@ -1,27 +1,23 @@
 variable "vpc_cidr" {
-  type = string
+    default = "10.0.0.0/16"
 }
 
-variable "public_subnet_cidr" {
-  type = string
+variable "public_sn_a" {
+    default = "10.0.10.0/24"
 }
 
-variable "public2_subnet_cidr" {
-  type = string
+variable "public_sn_b" {
+    default = "10.0.20.0/24"
 }
 
-variable "private_subnet_cidr" {
-  type = string
+variable "private_sn_a" {
+    default = "10.0.30.0/24"
 }
 
 variable "route_cidr" {
-  type = string
+    default = "0.0.0.0/0"
 }
 
 variable "default_sg" {
-  type = string
-}
-
-variable "target_id" {
-  type = string
+    type = string
 }
