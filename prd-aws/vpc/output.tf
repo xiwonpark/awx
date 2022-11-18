@@ -14,6 +14,10 @@ output "private_sn_a" {
   value = aws_subnet.private_sn_a.id
 }
 
-output "target_group_arn" {
-  value = aws_alb_target_group.target_group.arn
+output "target_group_awx_arn" {
+  value = aws_alb_target_group.target_group_awx.arn
+}
+
+output "target_group_vnc_arn" {
+  value = aws_alb_target_group.target_group_vnc.arn
 }

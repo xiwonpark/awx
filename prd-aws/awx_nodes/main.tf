@@ -40,6 +40,12 @@ EOF
 	}
 }
 
+resource "aws_alb_target_group_attachment" "target_group_attach_vnc" {
+	target_group_arn = var.target_group_vnc_arn
+	target_id = aws_instance.vncserver.id
+	port = 8080
+}
+
 resource "aws_instance" "lsfserver" {
 	ami = var.cent79_ami
 	vpc_security_group_ids = [var.default_sg]

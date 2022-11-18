@@ -9,3 +9,7 @@ variable "default_sg" {
 variable "cent79_ami" {
     default = "ami-09e2a570cb404b37e"
 }
+
+variable "target_group_vnc_arn" {
+    type = string
+}

@@ -96,7 +96,7 @@ EOF
 }
 
 resource "aws_alb_target_group_attachment" "target_group_attach" {
-        target_group_arn = var.target_group_arn
+        target_group_arn = var.target_group_awx_arn
         target_id = aws_instance.awx_controller.id
         port = 80
 }

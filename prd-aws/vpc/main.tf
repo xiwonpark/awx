@@ -108,19 +108,6 @@ data "aws_acm_certificate" "aws_cert" {
         statuses = ["ISSUED"]
 }
 
-resource "aws_alb_listener" "listener" {
-        load_balancer_arn = aws_alb.alb.arn
-        port = "443"
-        protocol = "HTTPS"
-        ssl_policy = "ELBSecurityPolicy-2016-08"
-        certificate_arn = data.aws_acm_certificate.aws_cert.arn
-
-        default_action {
-                target_group_arn = aws_alb_target_group.target_group.arn
-                type = "forward"
-        }
-}
-
 resource "aws_alb" "alb" {
         name = "sw-tf-alb"
         internal = false
@@ -133,10 +120,42 @@ resource "aws_alb" "alb" {
         }
 }
 
-resource "aws_alb_target_group" "target_group" {
+resource "aws_alb_target_group" "target_group_awx" {
         name = "sw-tf-tg-awx"
         port = 80
         protocol = "HTTP"
         vpc_id = aws_vpc.vpc.id
 }
 
+resource "aws_alb_target_group" "target_group_vnc" {
+        name = "sw-tf-tg-vnc"
+        port = 8080
+        protocol = "HTTP"
+        vpc_id = aws_vpc.vpc.id
+}
+
+resource "aws_alb_listener" "listener_awx" {
+        load_balancer_arn = aws_alb.alb.arn
+        port = "443"
+        protocol = "HTTPS"
+        ssl_policy = "ELBSecurityPolicy-2016-08"
+        certificate_arn = data.aws_acm_certificate.aws_cert.arn
+
+        default_action {
+                target_group_arn = aws_alb_target_group.target_group_awx.arn
+                type = "forward"
+        }
+}
+
+resource "aws_alb_listener" "listener_vnc" {
+        load_balancer_arn = aws_alb.alb.arn
+        port = "8443"
+        protocol = "HTTPS"
+        ssl_policy = "ELBSecurityPolicy-2016-08"
+        certificate_arn = data.aws_acm_certificate.aws_cert.arn
+
+        default_action {
+                target_group_arn = aws_alb_target_group.target_group_vnc.arn
+                type = "forward"
+        }
+}

@@ -24,11 +24,12 @@ module "awx_controller" {
         source                  = "./awx_controller"
         private_sn_a            = module.vpc.private_sn_a
         default_sg              = module.sg.default_sg
-        target_group_arn        = module.vpc.target_group_arn
+        target_group_awx_arn    = module.vpc.target_group_awx_arn
 }
 
 module "awx_nodes" {
-        source                  ="./awx_nodes"
+        source                  = "./awx_nodes"
         private_sn_a            = module.vpc.private_sn_a
         default_sg              = module.sg.default_sg
+        target_group_vnc_arn    = module.vpc.target_group_vnc_arn
 }

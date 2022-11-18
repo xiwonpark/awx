@@ -6,7 +6,7 @@ variable "default_sg" {
         type = string
 }
 
-variable "target_group_arn" {
+variable "target_group_awx_arn" {
         type = string
 }
 
