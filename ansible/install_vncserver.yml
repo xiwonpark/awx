@@ -1,0 +1,15 @@
+---
+- name: VNC Server Installation
+  hosts: vncserver
+  remote_user: root
+  become: true
+  tasks:
+  - name:
+    yum:
+      name:
+        - "@^graphical-server-environment"
+        - gdm
+        - tigervnc
+        - tigervnc-server
+        - xinetd
+      state: present
