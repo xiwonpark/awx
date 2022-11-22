@@ -13,3 +13,7 @@ variable "cent79_ami" {
 variable "target_group_vnc_arn" {
     type = string
 }
+
+variable "target_group_grafana_arn" {
+    type = string
+}

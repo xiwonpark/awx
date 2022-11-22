@@ -134,6 +134,13 @@ resource "aws_alb_target_group" "target_group_vnc" {
         vpc_id = aws_vpc.vpc.id
 }
 
+resource "aws_alb_target_group" "target_group_grafana" {
+        name = "sw-tf-tg-grafana"
+        port = 3000
+        protocol = "HTTP"
+        vpc_id = aws_vpc.vpc.id
+}
+
 resource "aws_alb_listener" "listener_awx" {
         load_balancer_arn = aws_alb.alb.arn
         port = "443"
@@ -156,6 +163,19 @@ resource "aws_alb_listener" "listener_vnc" {
 
         default_action {
                 target_group_arn = aws_alb_target_group.target_group_vnc.arn
+                type = "forward"
+        }
+}
+
+resource "aws_alb_listener" "listener_grafana" {
+        load_balancer_arn = aws_alb.alb.arn
+        port = "8888"
+        protocol = "HTTPS"
+        ssl_policy = "ELBSecurityPolicy-2016-08"
+        certificate_arn = data.aws_acm_certificate.aws_cert.arn
+
+        default_action {
+                target_group_arn = aws_alb_target_group.target_group_grafana.arn
                 type = "forward"
         }
 }
