@@ -4,7 +4,14 @@
   remote_user: root
   become: true
   tasks:
-  - name:
+  - name: Install epel-release repo
+    yum:
+      name:
+        - https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+        - tomcat
+      state: latest
+
+  - name: Install Server with GUI & tigervnc
     yum:
       name:
         - "@^graphical-server-environment"
@@ -13,3 +20,17 @@
         - tigervnc-server
         - xinetd
       state: present
+
+  - name: Install guacd for vnc proxy
+    yum:
+      name:
+        - guacd
+        - libguac-client-vnc.x86_64
+      enablerepo: "epel"
+      state: present
+
+  - name: wget guacamole.war
+    get_url:
+      url: https://dlcdn.apache.org/guacamole/1.4.0/binary/guacamole-1.4.0.war
+      dest: /root/
+      mode: 0755

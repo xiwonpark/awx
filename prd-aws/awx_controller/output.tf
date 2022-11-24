@@ -1,3 +1,3 @@
 output "awx_controller" {
-    value = aws_instance.awx_controller.id
+  value = aws_instance.awx_controller.id
 }

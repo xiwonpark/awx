@@ -1,3 +1,3 @@
 output "bastion" {
-    value = aws_instance.bastion.id
+  value = aws_instance.bastion.id
 }

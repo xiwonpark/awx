@@ -1,11 +1,11 @@
 variable "public_sn_a" {
-    type = string
+  type = string
 }
 
 variable "default_sg" {
-    type = string
+  type = string
 }
 
 variable "cent79_ami" {
-    default = "ami-09e2a570cb404b37e"
+  default = "ami-09e2a570cb404b37e"
 }

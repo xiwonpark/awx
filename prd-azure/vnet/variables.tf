@@ -1,11 +1,11 @@
 variable "vnet_cidr" {
-    type = string
+  type = string
 }
 
 variable "location" {
-    type = string
+  type = string
 }
 
 variable "LSF_RC_RG" {
-    type = string
+  type = string
 }

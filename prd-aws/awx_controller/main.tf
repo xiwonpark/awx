@@ -1,10 +1,10 @@
 resource "aws_instance" "awx_controller" {
-        ami = var.cent79_ami
-	vpc_security_group_ids = [var.default_sg]
-        instance_type = "t3.xlarge"
-        subnet_id = var.private_sn_a
-	private_ip = var.awx_controller_ip
-	user_data = <<EOF
+  ami                    = var.cent79_ami
+  vpc_security_group_ids = [var.default_sg]
+  instance_type          = "t3.xlarge"
+  subnet_id              = var.private_sn_a
+  private_ip             = var.awx_controller_ip
+  user_data              = <<EOF
 #!/bin/sh
 #!/usr/bin/env python3
 
@@ -90,13 +90,13 @@ init 6
 fi
 EOF
 
-        tags = {
-            Name = "sw-tf-controller"
-        }
+  tags = {
+    Name = "sw-tf-controller"
+  }
 }
 
 resource "aws_alb_target_group_attachment" "target_group_attach" {
-        target_group_arn = var.target_group_awx_arn
-        target_id = aws_instance.awx_controller.id
-        port = 80
+  target_group_arn = var.target_group_awx_arn
+  target_id        = aws_instance.awx_controller.id
+  port             = 80
 }
