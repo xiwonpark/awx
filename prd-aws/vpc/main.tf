@@ -10,7 +10,7 @@ resource "aws_vpc" "vpc" {
 # <IDENTIFIER> = <EXPRESSTIONS> # Argument
 # }
 #
-# Ident is two Space
+# Indent is two Space
 # Argument definition
 ## Key = Value
 # Indent style diff
