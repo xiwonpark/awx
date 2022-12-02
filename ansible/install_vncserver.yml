@@ -34,3 +34,83 @@
       url: https://dlcdn.apache.org/guacamole/1.4.0/binary/guacamole-1.4.0.war
       dest: /root/
       mode: 0755
+
+# cp guacamole-1.4.0.war /var/lib/tomcat/webapps/guacamole.war
+# systemctl stop firewalld
+# systemctl disable firewalld
+# systemctl isolate graphical.target
+# systemctl set-default graphical.target
+
+# vi /etc/gdm/custom.conf
+# [xdmcp]
+# Enable=true
+
+# vi /etc/xinetd.d/xvncserver
+# service xvncserver
+# {
+# disable = no
+# protocol = tcp
+# socket_type = stream
+# wait = no
+# user = nobody
+# server = /usr/bin/Xvnc
+# server_args = -inetd -query localhost -once -geometry 1024x768 -depth 24 securitytypes=none
+# }
+
+# vi /etc/services
+# ...
+# # VNC xinetd GDM Base
+# xvncserver  5950/tcp
+
+# systemctl start xinetd
+# systemctl enable xinetd
+
+# init 6
+
+# netstat -antup |egrep -i "177|5950"
+
+# /usr/bin/Xvnc :1 -query localhost -geometry 1024x768 -securitytypes none &
+
+# ps -ef |grep Xvnc
+
+# systemctl start guacd tomcat
+# systemctl enable guacd tomcat
+
+# mkdir /etc/guacamole
+
+# vi /etc/guacamole/user-mapping.xml
+# <user-mapping>
+
+#     <!-- Another user, but using md5 to hash the password
+#          (example below uses the md5 hash of "PASSWORD") -->
+#     <authorize
+#             username="UserName"
+#             password="Password"
+#             >
+
+#         <!-- First authorized connection -->
+#         <connection name="test_session01">
+#             <protocol>vnc</protocol>
+#             <param name="hostname">10.0.30.23</param>
+#             <param name="port">5901</param>
+#         </connection>
+
+#         <!-- Second authorized connection -->
+#         <connection name="test_session02">
+#             <protocol>vnc</protocol>
+#             <param name="hostname">10.0.30.23</param>
+#             <param name="port">2</param>
+#         </connection>
+
+#     </authorize>
+
+# </user-mapping>
+
+# vi /etc/guacamole/guacd.conf
+# [server]
+# bind_host = 127.0.0.1
+# bind_port = 4822
+
+# systemctl restart guacd tomcat
+
+# http://[Guacamole_IP]:8080/guacamole

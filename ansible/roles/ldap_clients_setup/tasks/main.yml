@@ -1,0 +1,16 @@
+---
+- name: Install LDAP Clinet PKGs
+  yum:
+    name:
+      - openldap-clients
+      - nss-pam-ldapd
+      - pam_ldap
+      - autofs
+      - nfs-utils
+    state: latest
+
+- name: nslcd config
+  shell: authconfig --enableldap --enableldapauth --ldapserver=10.0.30.22 --ldapbasedn="dc=test,dc=com" --update
+
+  notify:
+    - nslcd start

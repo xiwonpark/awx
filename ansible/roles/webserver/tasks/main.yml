@@ -1,0 +1,6 @@
+---
+- name: Install Apache Web Server on Linux
+  include_tasks: "{{os_type}}.yml"
+
+- name: Index Template
+  include_tasks: firstpage.yml
