@@ -37,3 +37,7 @@ output "lsfnode01" {
 output "bastion" {
   value = module.bastion.bastion
 }
+
+output "efs_dns" {
+  value = module.efs.efs_dns
+}

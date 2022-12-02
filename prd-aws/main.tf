@@ -28,9 +28,15 @@ module "awx_controller" {
 }
 
 module "awx_nodes" {
-  source                   = "./awx_nodes"
-  private_sn_a             = module.vpc.private_sn_a
-  default_sg               = module.sg.default_sg
-  target_group_vnc_arn     = module.vpc.target_group_vnc_arn
-  target_group_grafana_arn = module.vpc.target_group_grafana_arn
+  source               = "./awx_nodes"
+  private_sn_a         = module.vpc.private_sn_a
+  default_sg           = module.sg.default_sg
+  target_group_vnc_arn = module.vpc.target_group_vnc_arn
+  efs_dns              = module.efs.efs_dns
+}
+
+module "efs" {
+  source       = "./efs"
+  private_sn_a = module.vpc.private_sn_a
+  default_sg   = module.sg.default_sg
 }
