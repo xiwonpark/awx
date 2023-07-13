@@ -4,3 +4,5 @@ prd-aws/.terraform.lock.hcl
 terraform.tfstate.backup
 prd-aws/terraform.tfstate
 .DS_Store
+prd-azure/.terraform.lock.hcl
+prd-azure/.terraform

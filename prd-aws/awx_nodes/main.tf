@@ -12,8 +12,8 @@ sudo hostnamectl set-hostname 'sw-tf-ldapserver'
 sudo sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
 sudo sed -i 's/#PermitRootLogin yes/PermitRootLogin yes/g' /etc/ssh/sshd_config
 systemctl restart sshd
-sudo mkdir -p /efs
-sudo mount -t nfs4 -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport "${var.efs_dns}":/ /efs
+sudo mkdir -p /user
+sudo mount -t nfs4 -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport "${var.efs_dns}":/ /user
 EOF
 
   tags = {
@@ -35,8 +35,8 @@ sudo hostnamectl set-hostname 'sw-tf-vncserver'
 sudo sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
 sudo sed -i 's/#PermitRootLogin yes/PermitRootLogin yes/g' /etc/ssh/sshd_config
 systemctl restart sshd
-sudo mkdir -p /efs
-sudo mount -t nfs4 -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport "${var.efs_dns}":/ /efs
+sudo mkdir -p /user
+sudo mount -t nfs4 -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport "${var.efs_dns}":/ /user
 
 # MFA Setting
 yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
@@ -68,8 +68,8 @@ sudo hostnamectl set-hostname 'sw-tf-lsfserver'
 sudo sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
 sudo sed -i 's/#PermitRootLogin yes/PermitRootLogin yes/g' /etc/ssh/sshd_config
 systemctl restart sshd
-sudo mkdir -p /efs
-sudo mount -t nfs4 -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport "${var.efs_dns}":/ /efs
+sudo mkdir -p /user
+sudo mount -t nfs4 -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport "${var.efs_dns}":/ /user
 EOF
 
   tags = {
@@ -91,11 +91,34 @@ sudo hostnamectl set-hostname 'sw-tf-lsfnode01'
 sudo sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
 sudo sed -i 's/#PermitRootLogin yes/PermitRootLogin yes/g' /etc/ssh/sshd_config
 systemctl restart sshd
-sudo mkdir -p /efs
-sudo mount -t nfs4 -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport "${var.efs_dns}":/ /efs
+sudo mkdir -p /user
+sudo mount -t nfs4 -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport "${var.efs_dns}":/ /user
 EOF
 
   tags = {
     Name = "sw-tf-lsfnode01"
+  }
+}
+
+resource "aws_instance" "test" {
+  ami                    = var.cent79_ami
+  vpc_security_group_ids = [var.default_sg]
+  instance_type          = "t3.micro"
+  subnet_id              = var.private_sn_a
+  private_ip             = "10.0.30.33"
+  user_data              = <<EOF
+#!/bin/bash
+echo 'Ezcom!234' |passwd --stdin 'root'
+echo 'Ezcom!234' |passwd --stdin 'centos'
+sudo hostnamectl set-hostname 'sw-tf-test'
+sudo sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
+sudo sed -i 's/#PermitRootLogin yes/PermitRootLogin yes/g' /etc/ssh/sshd_config
+systemctl restart sshd
+sudo mkdir -p /user
+sudo mount -t nfs4 -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport "${var.efs_dns}":/ /user
+EOF
+
+  tags = {
+    Name = "sw-tf-test"
   }
 }

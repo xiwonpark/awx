@@ -1,7 +1,0 @@
----
-- name: Create Web Page
-  template:
-    src: index.html
-    dest: /var/www/html/index.html
-  notify:
-    - restart server

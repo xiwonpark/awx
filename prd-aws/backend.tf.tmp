@@ -1,0 +1,13 @@
+## terraform backend 관련 코드는 주석처리 후 terraform init, plan, apply
+## apply가 완료되어 backend로 사용할 s3 bucket, dynamodb등이 생성 되면, 주석 해제 후
+## s3에 tfstate 파일 업데이트시 terraform init
+terraform {
+  backend "s3" {
+    bucket         = "sw-tf-tfstate"
+    key            = "tfstate/prd-aws.tfstate"
+    region         = "ap-northeast-2"
+    encrypt        = true
+    dynamodb_table = "terraform-lock"
+    acl            = "bucket-owner-full-control"
+  }
+}

@@ -1,6 +1,0 @@
----
-- name: restart server
-  service:
-    name: "{{pkg_name}}"
-    state: restarted
-    enabled: yes

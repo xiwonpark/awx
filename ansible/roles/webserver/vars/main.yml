@@ -1,8 +1,0 @@
----
-os_type: "{{ 'CentOS' if ansible_distribution == 'CentOS'
-        else 'Ubuntu' if ansible_distribution == 'Ubuntu'
-        else 'Unknown' }}"
-
-pkg_name: "{{ 'httpd' if ansible_distribution == 'CentOS'
-        else 'apache2' if ansible_distribution == 'Ubuntu'
-        else 'Unknown' }}"

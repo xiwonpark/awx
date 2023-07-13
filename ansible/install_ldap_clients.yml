@@ -1,7 +1,0 @@
----
-- name: Install LDAP Clients & nslcd start
-  hosts: ldapclients
-  become: yes
-
-  roles:
-    - role: ./roles/ldap_clients_setup
